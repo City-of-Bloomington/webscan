@@ -28,7 +28,9 @@
     </thead>
     <tbody>
     {% for g in report.grackle %}
-        <tr><td><a href="{{ g.url }}">{{ g.filename }}</a></td>
+        <tr><td><a href="{{ g.url }}">{{ g.filename }}</a>
+                {% if g.status=='deleted' %}<span class="usa-tag">deleted</span>{% endif %}
+            </td>
             <td>{% if     g.score == 100 %} A+
                 {% elseif g.score > 90 %} A
                 {% elseif g.score > 80 %} B

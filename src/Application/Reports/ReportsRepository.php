@@ -35,7 +35,14 @@ class ReportsRepository extends PdoRepository
         $q->execute([$id]);
         $r   = $q->fetchAll(\PDO::FETCH_ASSOC);
         if (count($r)) {
-            $q = $this->pdo->prepare("select * from grackle_results where path=?");
+            $sql = "select g.*,
+                        case when left(g.url, 46)='https://bloomington.in.gov/sites/default/files'
+                            then if(f.fid, '', 'deleted') else ''
+                        end as status
+                    from grackle_results g
+                    left join drupal.file_managed f on f.uri=replace(g.url, 'https://bloomington.in.gov/sites/default/files', 'public:/')
+                    where g.path=?";
+            $q = $this->pdo->prepare($sql);
             $q->execute([$r[0]['path']]);
             $r[0]['grackle'] = $q->fetchAll(\PDO::FETCH_ASSOC);
             return $r[0];
