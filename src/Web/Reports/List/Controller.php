@@ -38,7 +38,7 @@ class Controller extends \Web\Controller
     {
         $fields = ['path', 'username', 'department', 'errors', 'sort'];
         $params = [];
-        $regex  = '/[^a-zA-Z0-9\/\s\\\-]/';
+        $regex  = '/[^a-zA-Z0-9\.\/\s\\\-]/';
         foreach ($fields as $f) {
             if (!empty($_GET[$f])) {
                 $params[$f] = preg_replace($regex, '', $_GET[$f]);
@@ -81,7 +81,7 @@ class Controller extends \Web\Controller
         if (in_array($s[0], ReportsRepository::$sortable_columns)) {
             return (isset($s[1]) && $s[1]=='desc')
                     ? "$s[0] desc"
-                    : "$s[0] asc";
+                    :  $s[0];
         }
         return null;
     }

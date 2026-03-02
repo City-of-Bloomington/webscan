@@ -96,3 +96,18 @@
         </ul>
     </nav>
 {% endmacro %}
+
+{% macro sortable_header(fieldname, label, current_sort, query_params) %}
+    {% set s = (current_sort==fieldname) ? fieldname~' desc' : fieldname %}
+    {% set c =  current_sort==fieldname ? 'arrow_drop_up' : (current_sort==fieldname~' desc' ? 'arrow_drop_down' : '') %}
+    <th {{ current_sort==fieldname ? 'aria-sort="ascending"' : (current_sort==fieldname~' desc' ? 'aria-sort="descending"' : '') }}>
+        <a href="{{ REQUEST.uri.path }}?{{ http_build_query(query_params|merge({sort:s})) }}">
+            {{ label }}
+            {% if c %}
+            <svg class="usa-icon bottom-neg-2px" aria-hidden="true" focusable="false" role="img">
+                <use href="{{ USWDS_URL }}/img/sprite.svg#{{ c }}"></use>
+            </svg>
+            {% endif %}
+        </a>
+    </th>
+{% endmacro %}

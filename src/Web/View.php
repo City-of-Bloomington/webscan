@@ -70,6 +70,7 @@ abstract class View
         $this->twig->addFunction(new TwigFunction('uri',         [$this, 'generateUri']));
         $this->twig->addFunction(new TwigFunction('url',         [$this, 'generateUrl']));
         $this->twig->addFunction(new TwigFunction('isAllowed',   [$this, 'isAllowed'  ]));
+        $this->twig->addFunction(new TwigFunction('http_build_query', 'http_build_query'));
     }
 
     /**

@@ -31,8 +31,7 @@
             {{ forms.field_select('department', 'department', 'Department', params.department ?? '', departments, false, { onchange:'this.form.submit();' } ) }}
             {{ forms.field_select('errors',     'errors',     'Errors',     params.errors ?? '', errorOptions, false, { onchange:'this.form.submit();' } ) }}
 
-            {{ forms.field_select('sort', 'sort', 'Sort', sort, sorts, false, { onchange:'this.form.submit();' } ) }}
-
+            <input name="sort" type="hidden" value="{{ sort }}" />
             {{ forms.button('submit', 'Search', 'search') }}
             <a class="usa-button" href="{{ BASE_URL }}">Reset</a>
         </fieldset>
@@ -40,14 +39,14 @@
 
     <table class="usa-table usa-table--compact">
     <thead>
-        <tr><th>Page</th>
-            <th>Errors</th>
-            <th>Contrast</th>
-            <th>PDF Problems</th>
-            <th>Last Editor</th>
-            <th>Department</th>
-            <th>Scanned</th>
-            <th>Views (2025)</th>
+        <tr>{{ pagination.sortable_header('r.path',     'Page',         sort, params) }}
+            {{ pagination.sortable_header('error',      'Errors',       sort, params) }}
+            {{ pagination.sortable_header('contrast',   'Contrast',     sort, params) }}
+            {{ pagination.sortable_header('pdf',        'PDF Problems', sort, params) }}
+            {{ pagination.sortable_header('username',   'Last Editor',  sort, params) }}
+            {{ pagination.sortable_header('department', 'Department',   sort, params) }}
+            {{ pagination.sortable_header('created',    'Scanned',      sort, params) }}
+            {{ pagination.sortable_header('views',      'Views (2025)', sort, params) }}
         </tr>
     </thead>
     <tbody>
