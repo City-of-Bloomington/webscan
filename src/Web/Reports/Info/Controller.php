@@ -19,6 +19,8 @@ class Controller extends \Web\Controller
         if ($r) {
             $grackle = $content->grackle_results($r['path']);
             foreach ($grackle as $g) {
+                $pages           = $content->pages($g['filename']);
+                $g['link_count'] = count($pages);
                 $r['grackle'][]  = $g;
             }
             return new View($r);

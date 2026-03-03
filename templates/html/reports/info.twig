@@ -40,7 +40,10 @@
                 {% endif %}
             </td>
             <td>{{ g.scanned|date('n/j/Y') }}</td>
-            <td><a href="{{ uri('content.search') ~ '?query=' ~ g.filename }}">Website Pages</a></td>
+            <td><a href="{{ uri('content.search') ~ '?query=' ~ g.filename }}">
+                    Website Pages ({{ g.link_count }})
+                </a>
+            </td>
         </tr>
     {% endfor %}
     </tbody>
