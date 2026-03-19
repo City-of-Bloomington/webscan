@@ -3,6 +3,7 @@
         "php": ">=8.3",
         "aura/router":                      "@stable",
         "graylog2/gelf-php":                "~1",
+        "guzzlehttp/guzzle":                "@stable",
         "guzzlehttp/psr7":                  "@stable",
         "jumbojett/openid-connect-php":     "@stable",
         "laminas/laminas-permissions-acl":  "@stable",
