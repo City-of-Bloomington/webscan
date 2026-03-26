@@ -1,3 +1,3 @@
-WAVE accessibility site scanning
+Site scanning
 =======
-Application for sending Drupal webpages to WAVE, storing the results, and linking them to the Drupal webpages.
+Application for scanning Drupal content for accessibility and other concerns

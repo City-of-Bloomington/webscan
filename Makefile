@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-APPNAME := wave
+APPNAME := webscan
 
 REQS := sassc msgfmt
 K := $(foreach r, ${REQS}, $(if $(shell command -v ${r} 2> /dev/null), '', $(error "${r} not installed")))

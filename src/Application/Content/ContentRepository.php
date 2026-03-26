@@ -17,6 +17,9 @@ class ContentRepository extends PdoRepository
         $this->table = 'node_field_data';
     }
 
+    /**
+     * Returns nodes with content that matches search
+     */
     public function pages(string $search): array
     {
         $sql = "select n.nid,
@@ -41,7 +44,7 @@ class ContentRepository extends PdoRepository
                     join paragraphs_item_field_data p on p.id=l.entity_id
                     join node__field_info_links     n on p.parent_id=n.field_info_links_target_id
                     union
-                    select a.entity_id,f.filename
+                    select a.entity_id,f.filename                 as content
                     from node__field_attachments a
                     join file_managed            f on f.fid=a.field_attachments_target_id
                     where a.field_attachments_display=1 and a.deleted=0
@@ -54,13 +57,52 @@ class ContentRepository extends PdoRepository
         return $result;
     }
 
+    /**
+     * Returns fields in a single node with content that matches search
+     */
+    public function page_content(int $nid, string $search): array
+    {
+        $sql = "select x.field,
+                       x.content
+                from node_field_data n
+                join path_alias      a on a.path=concat('/node/', n.nid)
+                join (
+                    select   entity_id,  body_value               as content, 'node__body' as field from node__body
+                    union
+                    select   entity_id,  field_aside_value        as content, 'node__field_aside' as field from node__field_aside
+                    union
+                    select   entity_id,  field_details_value      as content, 'node__field_details' as field from node__field_details
+                    union
+                    select   entity_id,  field_related_links_uri  as content, 'node__field_related_links' as field from node__field_related_links
+                    union
+                    select   entity_id,  field_call_to_action_uri as content, 'node__field_call_to_action' as field from node__field_call_to_action
+                    union
+                    select n.entity_id,l.field_info_link_uri      as content, 'paragraph__field_info_link' as field
+                    from paragraph__field_info_link l
+                    join paragraphs_item_field_data p on p.id=l.entity_id
+                    join node__field_info_links     n on p.parent_id=n.field_info_links_target_id
+                    union
+                    select a.entity_id,f.filename                 as content, 'node__field_attachments' as field
+                    from node__field_attachments a
+                    join file_managed            f on f.fid=a.field_attachments_target_id
+                    where a.field_attachments_display=1 and a.deleted=0
+                ) x on n.nid=x.entity_id
+                where n.nid=?
+                  and (x.content like ? or x.content like ?)";
+        $query   = $this->pdo->prepare($sql);
+        $encoded = str_replace('%', '\%', rawurlencode($search));
+        $query->execute([$nid, "%$search%", "%$encoded%"]);
+        $result  = $query->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
+    }
+
     public function grackle_results(string $path): array
     {
         $sql = "select g.*,
                     case when left(g.url, 46)='https://bloomington.in.gov/sites/default/files'
                         then if(f.fid, '', 'deleted') else ''
                     end as status
-                from      wave.grackle_results g
+                from      webscan.grackle_results g
                 left join drupal.file_managed  f on f.uri=replace(g.url, 'https://bloomington.in.gov/sites/default/files', 'public:/')
                 where g.path=?";
         $qq  = $this->pdo->prepare($sql);
