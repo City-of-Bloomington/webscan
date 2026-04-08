@@ -59,7 +59,8 @@ class ReportsRepository extends PdoRepository
                    left join analytics                         a on r.path=a.path
                    left join (
                        select path, count(*) as pdf
-                       from grackle_results where score<90
+                       from grackle_results
+                       where score<90 and unlinked=false
                        group by path
                    ) g on r.path=g.path";
 

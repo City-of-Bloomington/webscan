@@ -44,14 +44,15 @@ class ContentRepository extends PdoRepository
                     join paragraphs_item_field_data p on p.id=l.entity_id
                     join node__field_info_links     n on p.parent_id=n.field_info_links_target_id
                     union
-                    select a.entity_id,f.filename                 as content
+                    select a.entity_id,
+                           concat('https://bloomington.in.gov/sites/default/files', substring(f.uri, 9)) as content
                     from node__field_attachments a
                     join file_managed            f on f.fid=a.field_attachments_target_id
                     where a.field_attachments_display=1 and a.deleted=0
                 ) x on n.nid=x.entity_id
                 where (x.content like ? or x.content like ?)";
         $query   = $this->pdo->prepare($sql);
-        $encoded = str_replace('%', '\%', rawurlencode($search));
+        $encoded = str_replace('%', '\%', self::urlencode($search));
         $query->execute(["%$search%", "%$encoded%"]);
         $result  = $query->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
@@ -90,7 +91,7 @@ class ContentRepository extends PdoRepository
                 where n.nid=?
                   and (x.content like ? or x.content like ?)";
         $query   = $this->pdo->prepare($sql);
-        $encoded = str_replace('%', '\%', rawurlencode($search));
+        $encoded = str_replace('%', '\%', self::urlencode($search));
         $query->execute([$nid, "%$search%", "%$encoded%"]);
         $result  = $query->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
@@ -104,10 +105,23 @@ class ContentRepository extends PdoRepository
                     end as status
                 from      webscan.grackle_results g
                 left join drupal.file_managed  f on f.uri=replace(g.url, 'https://bloomington.in.gov/sites/default/files', 'public:/')
-                where g.path=?";
+                where unlinked=false
+                  and g.path=?";
         $qq  = $this->pdo->prepare($sql);
         $qq->execute([$path]);
         $res = $qq->fetchAll(\PDO::FETCH_ASSOC);
         return $res;
+    }
+
+    /**
+     * Url encoding that matches Drupal's method
+     *
+     * Drupal does not encode forward slashes.  If we want to find content, we
+     * need to urlencode strings the same way Drupal does.
+     * @see https://api.drupal.org/api/drupal/core!lib!Drupal!Component!Utility!UrlHelper.php/function/UrlHelper::encodePath/11.x
+     */
+    private static function urlencode($string): string
+    {
+        return str_replace('%2F', '/', rawurlencode($string));
     }
 }

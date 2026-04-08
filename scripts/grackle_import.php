@@ -17,15 +17,25 @@ define('PATH',     3);
 
 $pdo = Database::getConnection();
 $pdo->query('truncate table grackle_results');
-$ins = $pdo->prepare('insert into grackle_results values(?,?,?,?,?)');
+
+$fields = [
+    'path',
+    'filename',
+    'url',
+    'score',
+    'scanned'
+];
+$col = implode(',', $fields);
+$par = implode(',', array_map(fn($f): string => ":$f", $fields));
+$ins = $pdo->prepare("insert into grackle_results ($col) values($par)");
 
 while ($d = fgetcsv($csv)) {
     $data = [
-        str_replace('https://bloomington.in.gov', '', urldecode($d[PATH])),
-        urldecode($d[FILENAME]),
-        urldecode($d[URL]),
-             (int)$d[SCORE],
-             $SCAN_DATE
+        'path'     => str_replace('https://bloomington.in.gov', '', urldecode($d[PATH])),
+        'filename' => urldecode($d[FILENAME]),
+        'url'      => urldecode($d[URL]),
+        'score'    =>      (int)$d[SCORE],
+        'scanned'  =>      $SCAN_DATE
     ];
     echo $data[1]."\n";
     $ins->execute($data);
