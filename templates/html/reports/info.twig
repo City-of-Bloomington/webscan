@@ -17,7 +17,7 @@
     <tr><th>Alert</th>   <td>{{ report.alert    }}</td>
     </table>
 
-    {% if report.grackle %}
+    {% if report.grackle is defined %}
     <h2>Grackle PDF Scan Results</h2>
     <table class="usa-table usa-table--compact">
     <thead>
