@@ -33,10 +33,12 @@ class ContentRepository extends PdoRepository
                     union select   entity_id,  field_details_value      as content from node__field_details
                     union select   entity_id,  field_related_links_uri  as content from node__field_related_links
                     union select   entity_id,  field_call_to_action_uri as content from node__field_call_to_action
-                    union select n.entity_id,l.field_info_link_uri      as content
-                          from paragraph__field_info_link l
-                          join paragraphs_item_field_data p on p.id=l.entity_id
-                          join node__field_info_links     n on p.parent_id=n.field_info_links_target_id
+                    union select i.entity_id,l.field_info_link_uri      as content
+                          from node_field_data                      n
+                          join node__field_info_links               i on n.vid=i.revision_id
+                          join paragraphs_item_revision_field_data pr on pr.revision_id=i.field_info_links_target_revision_id
+                          join paragraph__field_info_card           c on c.revision_id=pr.revision_id
+                          join paragraph__field_info_link           l on l.revision_id=c.field_info_card_target_revision_id
                     union select a.entity_id,
                                  concat('https://bloomington.in.gov/sites/default/files', substring(f.uri, 9)) as content
                           from node__field_attachments a
@@ -65,10 +67,12 @@ class ContentRepository extends PdoRepository
                     union select   entity_id,  field_details_value      as content, 'node__field_details'        as field from node__field_details
                     union select   entity_id,  field_related_links_uri  as content, 'node__field_related_links'  as field from node__field_related_links
                     union select   entity_id,  field_call_to_action_uri as content, 'node__field_call_to_action' as field from node__field_call_to_action
-                    union select n.entity_id,l.field_info_link_uri      as content, 'paragraph__field_info_link' as field
-                          from paragraph__field_info_link l
-                          join paragraphs_item_field_data p on p.id=l.entity_id
-                          join node__field_info_links     n on p.parent_id=n.field_info_links_target_id
+                    union select i.entity_id,l.field_info_link_uri      as content, 'paragraph__field_info_link' as field
+                          from node_field_data                      n
+                          join node__field_info_links               i on n.vid=i.revision_id
+                          join paragraphs_item_revision_field_data pr on pr.revision_id=i.field_info_links_target_revision_id
+                          join paragraph__field_info_card           c on c.revision_id=pr.revision_id
+                          join paragraph__field_info_link           l on l.revision_id=c.field_info_card_target_revision_id
                     union select a.entity_id,f.filename                 as content, 'node__field_attachments'    as field
                           from node__field_attachments a
                           join file_managed            f on f.fid=a.field_attachments_target_id
