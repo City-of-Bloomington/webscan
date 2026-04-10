@@ -21,11 +21,7 @@ class GrackleGateway
     {
         $this->server = $config['server'];
         $this->client = new Client(['base_uri'=>$config['server']]);
-
-        $res = $this->client->post("$config[server]/authorize", [
-            'json'=>['username'=>$config['user'], 'password'=>$config['pass']]
-        ]);
-        $this->jwt = (string)$res->getBody();
+        $this->jwt    = $config['api_key'];
     }
 
     public function licenses(): array
