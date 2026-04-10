@@ -2,7 +2,7 @@
  * @copyright 2026 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  * @param string query     Query string
- * @param array  results   Webpage results
+ * @param array  reports   Webpage results
  #}
 {% extends "html/layouts/default.twig" %}
 {% import  "html/macros/pagination.twig" as pagination %}
@@ -23,12 +23,36 @@
 
     {% if query %}
 
-        {% if results %}
+        {% if reports %}
         <h2>Webages Found</h2>
-        <table>
-            {% for r in results %}
-            <tr><td><a href="{{ DRUPAL_SITE }}{{ r.alias }}">{{ r.title }}</a></td></tr>
+        <table class="usa-table usa-table--compact">
+        <thead>
+            <tr><th>Page</th>
+                <th>Errors</th>
+                <th>Contrast</th>
+                <th>PDF Problems</th>
+                <th>Last Editor</th>
+                <th>Department</th>
+                <th>Scanned</th>
+                <th>Views (2025)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in reports %}
+            <tr><td><a href="{{ DRUPAL_SITE }}{{ r.path }}">{{ r.path }}</a></td>
+                <td>{{ r.error    ? r.error    : '' }}</td>
+                <td>{{ r.contrast ? r.contrast : '' }}</td>
+                <td>{% if r.pdf %}
+                    <a href="{{ uri('home.info', { id:r.id }) }}">{{ r.pdf }}</a>
+                    {% endif %}
+                </td>
+                <td>{{ r.username   }}</td>
+                <td>{{ r.department }}</td>
+                <td>{{ r.created | date('n/j/Y') }}</td>
+                <td>{{ r.views }}</td>
+            </tr>
             {% endfor %}
+        </tbody>
         </table>
         {% endif %}
 

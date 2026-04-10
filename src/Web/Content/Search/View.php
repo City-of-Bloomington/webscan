@@ -14,7 +14,7 @@ class View extends \Web\View
 
         $this->vars = [
             'query'   => $query,
-            'results' => $results
+            'reports' => $results
         ];
     }
 
