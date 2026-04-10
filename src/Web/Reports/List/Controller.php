@@ -24,8 +24,8 @@ class Controller extends \Web\Controller
                           itemsPerPage:parent::ITEMS_PER_PAGE,
                            currentPage:$page);
 
-
         return new View($list['rows'] ?? [],
+                        $search,
                         $params,
                         $sort,
                         $list['total'] ?? 0,
