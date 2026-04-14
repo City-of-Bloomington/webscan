@@ -75,6 +75,10 @@ foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $node) {
 
 function update_grackle_score(string $webpage_path, string $pdf_url, GrackleGateway $grackle)
 {
+    $webscan = Database::getConnection('default');
+    $sql     = "insert into grackle_results set path=:path,filename=:filename,url=:url,score=:score,scanned=now()";
+    $insert  = $webscan->prepare($sql);
+
     $file = DRUPAL_HOME.'/files'.substr($pdf_url, 40);
     echo "\t$pdf_url\n";
     echo "\t$file\n";
@@ -111,7 +115,7 @@ function unlink_obsolete_grackle_results(string $webpage_path, array $current_li
         if (!$s) {
             $e = $webscan->errorInfo();
             print_r($e);
-            print_r($d);
+            echo "$webpage_path\n$url\n";
             exit();
         }
     }

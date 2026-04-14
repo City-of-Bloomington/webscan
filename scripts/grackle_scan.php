@@ -71,7 +71,7 @@ function relink_pdf_results(string $path, string $url)
     if (!$s) {
         $e = $webscan->errorInfo();
         print_r($e);
-        print_r($d);
+        echo "$path\n$url\n";
         exit();
     }
 }
