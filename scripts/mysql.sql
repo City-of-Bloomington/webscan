@@ -30,12 +30,14 @@ create table analytics (
 );
 
 create table grackle_results (
+    id       int unsigned     not null primary key auto_increment,
     path     varchar(255)     not null,
     filename varchar(255)     not null,
     url      varchar(255)     not null,
     score    tinyint unsigned not null,
     scanned  datetime         not null,
-    unlinked bool             not null default 0
+    unlinked bool             not null default 0,
+    unique (path, filename)
 );
 
 insert into departments(nid, name, title, dn) values

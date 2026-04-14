@@ -78,6 +78,7 @@ function update_grackle_score(string $webpage_path, string $pdf_url, GrackleGate
     $webscan = Database::getConnection('default');
     $sql     = "insert into grackle_results set path=:path,filename=:filename,url=:url,score=:score,scanned=now()";
     $insert  = $webscan->prepare($sql);
+    $delete  = $webscan->prepare('delete from grackle_results where path=? and url=?');
 
     $file = DRUPAL_HOME.'/files'.substr($pdf_url, 40);
     echo "\t$pdf_url\n";
@@ -91,6 +92,7 @@ function update_grackle_score(string $webpage_path, string $pdf_url, GrackleGate
                 'url'      => $pdf_url,
                 'score'    => (int)$json['conformanceIndex']
             ];
+            $delete->execute([]);
             $s = $insert->execute($d);
             if (!$s) {
                 $e = $webscan->errorInfo();
