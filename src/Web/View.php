@@ -16,15 +16,15 @@ abstract class View
     protected $twig;
     public    $outputFormat = 'html';
 
-    abstract public function render();
+    abstract public function render(): string;
 
     /**
      * Configures the gettext translations
      */
-    public function __construct()
+    public function __construct(?string $format='html')
     {
         // Twig templates
-        $this->outputFormat = !empty($_REQUEST['format']) ? $_REQUEST['format'] : 'html';
+        $this->outputFormat = $format;
         $tpl = [];
 
         if (defined('THEME')) {

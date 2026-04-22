@@ -13,6 +13,7 @@ class Controller extends \Web\Controller
 {
     public function __invoke(array $params): \Web\View
     {
+        $format  = $params['format'] ?? 'html';
         $content = new ContentRepository();
         $reports = new ReportsRepository();
         $r       = $reports->loadById((int)$params['id']);
@@ -21,7 +22,7 @@ class Controller extends \Web\Controller
             foreach ($grackle as $g) {
                 $r['grackle'][]  = $g;
             }
-            return new View($r);
+            return new View($r, $format);
         }
 
         return new \Web\Views\NotFoundView();

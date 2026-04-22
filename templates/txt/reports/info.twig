@@ -1,0 +1,30 @@
+{#
+ * @copyright 2026 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
+ * @param array report
+ #}
+{{ report.title }}
+{{ DRUPAL_SITE }}{{ report.path }}
+
+Last WAVE scan: {{ report.created|date('n/j/Y') }}
+=========================
+WAVE Webpage Scan Results
+{{ url('home.info', { id: report.id }) }}
+Errors   {{ report.error    }}
+Contrast {{ report.contrast }}
+Alert    {{ report.alert    }}
+
+{% if report.grackle is defined %}
+Grackle PDF Scan Results
+========================
+{% for g in report.grackle %}
+{{ g.filename }} {% if g.status=='deleted' %}(deleted){% endif %}
+{%- if     g.score == 100 %} ( A+ )
+{%- elseif g.score > 90 %} ( A )
+{%- elseif g.score > 80 %} ( B )
+{%- elseif g.score > 70 %} ( C )
+{%- else %} ( F )
+{%- endif %} {{ g.scanned|date('n/j/Y') }}
+{{ g.url|replace({' ':'%20'}) }}
+{% endfor %}
+{% endif %}

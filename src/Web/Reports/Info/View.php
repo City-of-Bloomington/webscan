@@ -8,9 +8,9 @@ namespace Web\Reports\Info;
 
 class View extends \Web\View
 {
-    public function __construct(array $report)
+    public function __construct(array $report, ?string $format='html')
     {
-        parent::__construct();
+        parent::__construct($format);
 
         $this->vars = [
             'report' => $report
@@ -19,6 +19,6 @@ class View extends \Web\View
 
     public function render(): string
     {
-        return $this->twig->render('html/reports/info.twig', $this->vars);
+        return $this->twig->render($this->outputFormat.'/reports/info.twig', $this->vars);
     }
 }

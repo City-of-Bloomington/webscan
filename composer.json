@@ -7,6 +7,7 @@
         "guzzlehttp/psr7":                  "@stable",
         "jumbojett/openid-connect-php":     "@stable",
         "laminas/laminas-permissions-acl":  "@stable",
+        "phpmailer/phpmailer":              "@stable",
         "twig/twig":                        "@stable"
     },
     "require-dev": {

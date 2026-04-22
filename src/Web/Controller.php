@@ -8,12 +8,6 @@ namespace Web;
 abstract class Controller
 {
 	protected const ITEMS_PER_PAGE = 20;
-	protected $outputFormat;
-
-	public function __construct()
-	{
-        $this->outputFormat = 'html';
-	}
 
 	abstract public function __invoke(array $params): \Web\View;
 }
