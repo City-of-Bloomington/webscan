@@ -25,6 +25,9 @@
                     </button>
                     <ul id="user-nav" class="usa-nav__submenu">
                         <li class="usa-nav__submenu-item"><a href="{{ uri('home.logout') }}">Logout</a></li>
+                        {% if isAllowed('settings', 'index') %}
+                        <li class="usa-nav__submenu-item"><a href="{{ uri('settings.index') }}">Settings</a></li>
+                        {% endif %}
                     </ul>
                 </li>
             </ul>

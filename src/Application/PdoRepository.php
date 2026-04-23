@@ -10,6 +10,7 @@ abstract class PdoRepository
 {
     protected string $table;
     protected \PDO   $pdo;
+    public    const  COLUMNS = [];
 
     public function __construct(string $table)
     {
@@ -26,8 +27,8 @@ abstract class PdoRepository
 
 		if ($fields) {
 			foreach ($fields as $k=>$v) {
-                if (isset($this->columns)) {
-                    if (in_array($k, $this->columns)) {
+                if (static::COLUMNS) {
+                    if (in_array($k, static::COLUMNS)) {
                         $where[]    = "$k=:$k";
                         $params[$k] = $v;
                     }

@@ -112,8 +112,8 @@ abstract class View
     {
         global $ACL;
         $role = 'Anonymous';
-        if (isset  ($_SESSION['USER']) && $_SESSION['USER']->getRole()) {
-            $role = $_SESSION['USER']->getRole();
+        if (isset  ($_SESSION['USER']) && $_SESSION['USER']['role']) {
+            $role = $_SESSION['USER']['role'];
         }
         return $ACL->isAllowed($role, $resource, $action);
     }

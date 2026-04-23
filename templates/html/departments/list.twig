@@ -1,0 +1,19 @@
+{#
+ * @copyright 2026 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
+ * @param array departments
+ #}
+{% extends "html/layouts/default.twig" %}
+{% block content %}
+<section>
+    <header><h1>Departments</h1></header>
+
+    <table>
+        {% for d in departments %}
+        <tr><td><a href="{{ uri('departments.info', { id:d.id }) }}">{{ d.name }}</a></td>
+            <td>{{ d.title }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}
