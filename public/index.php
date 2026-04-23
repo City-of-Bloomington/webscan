@@ -22,7 +22,7 @@ if ($ROUTE) {
     $p          = pathinfo($ROUTE->name);
     $resource   = $p['filename'];
     $permission = $p['extension'];
-    $role       = isset($_SESSION['USER']) ? $_SESSION['USER']->getRole() : 'Anonymous';
+    $role       = isset($_SESSION['USER']) ? ($_SESSION['USER']['role'] ?? 'Staff') : 'Anonymous';
     if (   $ACL->hasResource($resource)
         && $ACL->isAllowed($role, $resource, $permission)) {
 

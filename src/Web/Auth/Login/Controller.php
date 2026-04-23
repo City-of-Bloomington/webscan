@@ -1,0 +1,67 @@
+<?php
+/**
+ * @copyright 2024-2026 City of Bloomington, Indiana
+ * @license https://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
+ */
+declare (strict_types=1);
+namespace Web\Auth\Login;
+
+use Application\Users\UsersRepository;
+use Jumbojett\OpenIDConnectClient;
+
+class Controller extends \Web\Controller
+{
+    public function __invoke(array $params): \Web\View
+    {
+        if (empty($_SESSION['return_url'])) {
+            $_SESSION['return_url'] = !empty($_REQUEST['return_url']) ? $_REQUEST['return_url'] : BASE_URL;
+        }
+
+        // If they don't have OpenID configured, send them onto the application's
+        // internal authentication system
+        global $AUTHENTICATION;
+        if (empty($AUTHENTICATION['oidc']['client_id'])) {
+            return new \Web\Views\NotFoundView();
+        }
+
+        $config = $AUTHENTICATION['oidc'];
+        $oidc   = new OpenIDConnectClient($config['server'], $config['client_id'], $config['client_secret']);
+        $oidc->addScope(['openid', 'allatclaims', 'profile']);
+        $oidc->setAllowImplicitFlow(true);
+        $oidc->setRedirectURL(\Web\View::generateUrl('home.login'));
+
+        $success = null;
+        try { $success = $oidc->authenticate(); }
+        catch (\Exception $e) { }
+        if (!$success) {
+            $_SESSION['errorMessages'][] = 'invalidLogin';
+        }
+
+        // at this step, the user has been authenticated by the OIDC server
+        $info = $oidc->getVerifiedClaims();
+
+        if (!$info->{$config['claims']['username']}) {
+            $_SESSION['errorMessages'][] = 'ldap/unknownUser';
+        }
+        // They may be authenticated according to ADFS,
+        // but that doesn't mean they have person record
+        // and even if they have a person record, they may not
+        // have a user account for that person record.
+        try {
+            $repo = new UsersRepository();
+            $user = $repo->loadByUsername($info->{$config['claims']['username' ]});
+            if ($user) { $_SESSION['USER'] = $user; }
+            else       { $_SESSION['errorMessages'][] = 'users/unknownUser'; }
+
+            $return_url = $_SESSION['return_url'];
+            unset($_SESSION['return_url']);
+            header("Location: $return_url");
+            exit();
+        }
+        catch (\Exception $e) {
+            $_SESSION['errorMessages'][] = $e->getMessage();
+        }
+
+        return new \Web\Views\ForbiddenView();
+    }
+}

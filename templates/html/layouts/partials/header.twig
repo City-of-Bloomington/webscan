@@ -1,5 +1,6 @@
 <header class="usa-header usa-header--basic">
     <div class="usa-nav-container">
+
         <div class="usa-navbar">
             <div class="usa-logo">
                 <a class="grid-row" href="{{ BASE_URI }}" title="City of Bloomington, Indiana>">
@@ -9,6 +10,27 @@
                     <em class="usa-logo__text font-sans-lg grid-col-auto margin-y-auto">{{ APPLICATION_NAME }}</em>
                 </a>
             </div>
+            <button type="button" class="usa-menu-btn">Menu</button>
         </div>
+
+        <nav aria-label="Primary navigation" class="usa-nav">
+            <button type="button" class="usa-nav__close">
+                <img src="{{ USWDS_URL }}/img/usa-icons/close.svg" role="img" alt="Close" />
+            </button>
+            {% if USER is defined %}
+            <ul class="usa-nav__primary usa-accordion">
+                <li class="usa-nav__primary-item">
+                    <button class="usa-accordion__button outline-1px" type="button" aria-controls="user-nav" aria-expanded="false">
+                        <span>{{ USER.username }}</span>
+                    </button>
+                    <ul id="user-nav" class="usa-nav__submenu">
+                        <li class="usa-nav__submenu-item"><a href="{{ uri('home.logout') }}">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+            {% else %}
+            <a class="usa-button" type="button" href="{{ url('home.login' ) ~ '?return_url=' ~ REQUEST.uri }}">Login</a>
+            {% endif %}
+        </nav>
     </div>
 </header>

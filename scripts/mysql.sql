@@ -21,6 +21,7 @@ create table users (
     id         int unsigned not null primary key,
     username   varchar(32)  not null unique,
     department varchar(32),
+    role       varchar(16),
     foreign key (department) references departments(name)
 );
 
