@@ -51,7 +51,7 @@
     </thead>
     <tbody>
         {% for r in reports %}
-        <tr><td><a href="{{ DRUPAL_SITE }}{{ r.path }}">{{ r.path }}</a></td>
+        <tr><td><a href="{{ uri('home.info', { id:r.id }) }}">{{ r.path }}</a></td>
             <td>{{ r.error    ? r.error    : '' }}</td>
             <td>{{ r.contrast ? r.contrast : '' }}</td>
             <td>{% if r.pdf %}
