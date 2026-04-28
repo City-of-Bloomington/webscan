@@ -35,4 +35,22 @@ final class UsersRepository extends PdoRepository
 
         return null;
     }
+
+    public function find(array $fields=[], ?string $order=null, ?int $itemsPerPage=null, ?int $currentPage=null): array
+    {
+        $select = self::BASE_SELECT;
+        $where  = [];
+        $params = [];
+
+		if ($fields) {
+			foreach ($fields as $k=>$v) {
+                if (in_array($k, static::COLUMNS)) {
+                    $where[]    = "$k=:$k";
+                    $params[$k] = $v;
+                }
+			}
+		}
+        $sql = self::buildSql($select, [], $where, null, $order);
+		return $this->performSelect($sql, $params, $itemsPerPage, $currentPage);
+    }
 }

@@ -22,9 +22,16 @@
 <section>
     <header><h2>Users</h2></header>
     <table>
+    <thead>
+        <tr><th>Username</th><th>Role</th></tr>
+    </thead>
+    <tbody>
         {% for u in users %}
-        <tr><td>{{ u.username }}</td></tr>
+        <tr><td>{{ u.username }}</td>
+            <td>{{ u.role     }}</td>
+        </tr>
         {% endfor %}
+    </tbody>
     </table>
 </section>
 {% endif %}

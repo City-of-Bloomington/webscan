@@ -11,7 +11,6 @@ use Laminas\Permissions\Acl\Resource\GenericResource as Resource;
 $ACL = new Acl();
 $ACL->addRole(new Role('anonymous'))
     ->addRole(new Role('authenticated'))
-    ->addRole(new Role('jobs_editor'))
     ->addRole(new Role('project_editor'))
     ->addRole(new Role('utilities_project_editor'))
     ->addRole(new Role('news'))
