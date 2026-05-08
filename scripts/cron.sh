@@ -1,1 +1,1 @@
-*/5 * * * * root SITE_HOME=/srv/data/webscan cd /srv/sites/webscan/scripts && php wave_scan.php
+* * * * * root cd /srv/sites/webscan/scripts && php wave_scan.php /srv/data/webscan

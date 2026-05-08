@@ -14,6 +14,29 @@ use Application\WaveGateway;
 use PHPMailer\PHPMailer\PHPMailer;
 use Web\Reports\Info\Controller as InfoController;
 
+if ($argc != 2 || in_array($argv[1], array('--help', '-help', '-h', '-?'))) {
+echo "
+Usage: php $argv[0] SITE_HOME
+
+SITE_HOME is the path to the data directory.
+The data directory must contain a site_config.php file.
+
+With the --help, -help, -h, or -? options, you can get this help.
+";
+exit();
+}
+
+$_SERVER['SITE_HOME'] = $argv[1];
+
+if (!is_file($_SERVER['SITE_HOME'].'/site_config.php')) {
+echo "
+php $argv[0]: invalid SITE_HOME -- '$argv[1]'
+php $argv[0] --help' for more information
+";
+exit(1);
+}
+
+
 include '../src/Web/bootstrap.php';
 
 $content = new ContentRepository();
